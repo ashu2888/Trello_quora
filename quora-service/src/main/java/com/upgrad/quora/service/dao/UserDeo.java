@@ -20,9 +20,9 @@ public class UserDeo {
         }
     }
 
-    public User_Entity getUserById(final String id) {
+    public User_Entity getUserById(final String uuid) {
         try {
-            return entityManager.createNamedQuery("userById", User_Entity.class).setParameter("id", id).getSingleResult();
+            return entityManager.createNamedQuery("userByUuid", User_Entity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

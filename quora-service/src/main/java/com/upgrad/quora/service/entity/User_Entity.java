@@ -8,7 +8,7 @@ import java.io.Serializable;
 @Table(name = "users", schema = "quora")
 @NamedQueries({
         @NamedQuery(name = "userByEmail", query = "select u from User_Entity u where u.email = :email"),
-        @NamedQuery(name = "userById", query = "select u from User_Entity u where u.id = :id")
+        @NamedQuery(name = "userByUuid", query = "select u from User_Entity u where u.uuid = :uuid")
 })
 public class User_Entity implements Serializable {
 

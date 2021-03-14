@@ -31,13 +31,12 @@ public class UserController {
         userEntity.setUserName(signupUserRequest.getUserName());
         userEntity.setEmail(signupUserRequest.getEmailAddress());
         userEntity.setPassword(signupUserRequest.getPassword());
-
         userEntity.setCountry(signupUserRequest.getCountry());
         userEntity.setAboutMe(signupUserRequest.getAboutMe());
         userEntity.setDob(signupUserRequest.getDob());
         userEntity.setContactNumber(signupUserRequest.getContactNumber());
-        userEntity.setSalt("1234abc");
-        userEntity.setRole("nonadmin");
+       /* userEntity.setSalt("1234abc");
+        userEntity.setRole("nonadmin");*/
 
         final User_Entity createdUserEntity = signupBusinessService.signup(userEntity);
         SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");

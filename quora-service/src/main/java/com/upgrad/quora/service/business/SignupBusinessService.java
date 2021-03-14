@@ -19,7 +19,7 @@ public class SignupBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public User_Entity signup(User_Entity userEntity) throws SignUpRestrictedException {
 
-        if(userDeo.getUserById(String.valueOf(userEntity.getId()))!=null)
+        if(userDeo.getUserById(String.valueOf(userEntity.getUuid()))!=null)
             throw new SignUpRestrictedException("SGR-001","Try any other Username, this Username has already been taken");
 
         if (userDeo.getUserByEmail(userEntity.getEmail()) != null)
