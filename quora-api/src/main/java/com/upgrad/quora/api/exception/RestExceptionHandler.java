@@ -24,4 +24,16 @@ public class RestExceptionHandler {
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.CONFLICT);
     }
 
+    /**
+     * Method for telling controller class to display custom message when AuthenticationFailedException thrown by service class
+     * @param exe
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(AuthenticationFailedException.class)
+    public ResponseEntity<ErrorResponse> authenticationFailed(AuthenticationFailedException exe , WebRequest request){
+        return new ResponseEntity<ErrorResponse>(
+                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.FORBIDDEN);
+    }
+
 }

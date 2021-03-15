@@ -8,7 +8,11 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name= "user_auth")
-public class userAuth {
+
+@NamedQueries({
+        @NamedQuery(name = "userByAuthToken", query = "select u from UserAuth u where u.accessToken =:token")
+})
+public class UserAuth {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
