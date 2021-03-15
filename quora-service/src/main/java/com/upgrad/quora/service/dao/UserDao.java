@@ -8,7 +8,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 @Repository
-public class UserDeo {
+public class UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -20,9 +20,10 @@ public class UserDeo {
         }
     }
 
-    public User_Entity getUserById(final String uuid) {
+
+    public User_Entity getUserByName(final String firstName) {
         try {
-            return entityManager.createNamedQuery("userByUuid", User_Entity.class).setParameter("uuid", uuid).getSingleResult();
+            return entityManager.createNamedQuery("userByName", User_Entity.class).setParameter("firstName", firstName).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

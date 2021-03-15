@@ -6,11 +6,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
-@Repository
+@Entity
 @Table(name= "user_auth")
 public class userAuth {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name="uuid")

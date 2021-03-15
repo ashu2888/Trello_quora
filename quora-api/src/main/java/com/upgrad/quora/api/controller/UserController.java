@@ -2,7 +2,7 @@ package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.SignupUserRequest;
 import com.upgrad.quora.api.model.SignupUserResponse;
-import com.upgrad.quora.service.business.SignupBusinessService;
+import com.upgrad.quora.service.business.UserBusinessService;
 import com.upgrad.quora.service.entity.User_Entity;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ import java.util.UUID;
 @RequestMapping("/")
 public class UserController {
     @Autowired
-    private SignupBusinessService signupBusinessService;
+    private UserBusinessService signupBusinessService;
+
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> usersignup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
 
@@ -35,8 +36,8 @@ public class UserController {
         userEntity.setAboutMe(signupUserRequest.getAboutMe());
         userEntity.setDob(signupUserRequest.getDob());
         userEntity.setContactNumber(signupUserRequest.getContactNumber());
-       /* userEntity.setSalt("1234abc");
-        userEntity.setRole("nonadmin");*/
+        userEntity.setRole("nonadmin");
+
 
         final User_Entity createdUserEntity = signupBusinessService.signup(userEntity);
         SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
@@ -44,10 +45,4 @@ public class UserController {
         return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/signin" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SignupUserResponse> usersignin(final String authorisation) throws SignUpRestrictedException {
-
-
-     return new ResponseEntity<>(HttpStatus.ACCEPTED);
-    }
-}
+ }
