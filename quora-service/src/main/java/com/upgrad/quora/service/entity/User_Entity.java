@@ -4,8 +4,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+/**
+ * Class for creating user table in database.
+ */
 @Entity
 @Table(name = "users", schema = "public")
+
+// queries for extracting data from database
 @NamedQueries({
         @NamedQuery(name = "userByEmail", query = "select u from User_Entity u where u.email = :email"),
         @NamedQuery(name = "userByUuid", query = "select u from User_Entity u where u.uuid = :uuid"),

@@ -12,6 +12,11 @@ public class UserDao {
     @PersistenceContext
     private EntityManager entityManager;
 
+    /**
+     * This method extracts data from db using emailid from users table.
+     * @param email
+     * @return
+     */
     public User_Entity getUserByEmail(final String email) {
         try {
             return entityManager.createNamedQuery("userByEmail", User_Entity.class).setParameter("email", email).getSingleResult();
@@ -20,7 +25,11 @@ public class UserDao {
         }
     }
 
-
+    /**
+     * This method extracts data from db using first name of user from users table.
+     * @param firstName
+     * @return
+     */
     public User_Entity getUserByName(final String firstName) {
         try {
             return entityManager.createNamedQuery("userByName", User_Entity.class).setParameter("firstName", firstName).getSingleResult();
@@ -28,6 +37,12 @@ public class UserDao {
             return null;
         }
     }
+
+    /**
+     * Method for inserting data into database
+     * @param userEntity
+     * @return
+     */
     public User_Entity createUser(User_Entity userEntity) {
         entityManager.persist(userEntity);
         return userEntity;

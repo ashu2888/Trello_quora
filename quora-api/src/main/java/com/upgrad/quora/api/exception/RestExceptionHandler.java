@@ -11,7 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
+/**
+ * Method for telling controller class to display custom message when exception thrown by service class
+ */
 public class RestExceptionHandler {
+    /**
+     * Method for telling controller class to display custom message when SignUpRestrictedException thrown by service class
+     */
     @ExceptionHandler(SignUpRestrictedException.class)
     public ResponseEntity<ErrorResponse> signUpRestriction(SignUpRestrictedException exe , WebRequest request){
         return new ResponseEntity<ErrorResponse>(

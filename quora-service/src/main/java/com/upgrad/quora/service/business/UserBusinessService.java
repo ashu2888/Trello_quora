@@ -16,6 +16,12 @@ public class UserBusinessService {
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
 
+    /**
+     * Method for user signup.This method checks for the entry of user in database with first name or email. If there is entry in table then throws proper exception
+     * @param userEntity
+     * @return
+     * @throws SignUpRestrictedException
+     */
 
     @Transactional(propagation = Propagation.REQUIRED)
     public User_Entity signup(User_Entity userEntity) throws SignUpRestrictedException {
