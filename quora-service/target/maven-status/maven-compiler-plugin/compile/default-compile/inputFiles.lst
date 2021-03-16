@@ -2,7 +2,7 @@ C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\u
 C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\entity\Question.java
 C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\exception\SignOutRestrictedException.java
 C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\exception\UserNotFoundException.java
-C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\entity\userAuth.java
+C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\entity\UserAuth.java
 C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\exception\AnswerNotFoundException.java
 C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\common\ErrorCode.java
 C:\Users\Admin\IdeaProjects\quora\Trello_quora\quora-service\src\main\java\com\upgrad\quora\service\exception\AuthorizationFailedException.java

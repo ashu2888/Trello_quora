@@ -1,5 +1,6 @@
 package com.upgrad.quora.service.dao;
 
+import com.upgrad.quora.service.entity.UserAuth;
 import com.upgrad.quora.service.entity.User_Entity;
 import org.springframework.stereotype.Repository;
 
@@ -48,4 +49,22 @@ public class UserDao {
         return userEntity;
     }
 
+    /**
+     * Method for extracting data from users table with userName
+     * @param userName
+     * @return
+     */
+    public User_Entity getUserByUserName(final String userName) {
+        try {
+            return entityManager.createNamedQuery("userByUsername", User_Entity.class).setParameter("userName", userName).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public UserAuth updateAuthToken(UserAuth authEntity) {
+
+        entityManager.merge(authEntity);
+        return authEntity;
+    }
 }

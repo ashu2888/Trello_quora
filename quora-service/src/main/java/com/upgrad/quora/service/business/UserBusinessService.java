@@ -1,12 +1,16 @@
 package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.UserDao;
+import com.upgrad.quora.service.entity.UserAuth;
 import com.upgrad.quora.service.entity.User_Entity;
+import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.ZonedDateTime;
 
 @Service
 public class UserBusinessService {
@@ -17,7 +21,8 @@ public class UserBusinessService {
     private PasswordCryptographyProvider passwordCryptographyProvider;
 
     /**
-     * Method for user signup.This method checks for the entry of user in database with first name or email. If there is entry in table then throws proper exception
+     * Method for user signup.This method checks for the entry of user in database with first name or email.
+     * If there is entry in table then throws proper exception
      * @param userEntity
      * @return
      * @throws SignUpRestrictedException
@@ -37,6 +42,43 @@ public class UserBusinessService {
         userEntity.setSalt(encryptedTxt[0]);
         userEntity.setPassword(encryptedTxt[1]);
         return userDao.createUser(userEntity);
+
+    }
+
+    /**
+     * Method for the validation of authentication
+     * @param userName
+     * @param password
+     * @return
+     * @throws AuthenticationFailedException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserAuth signIn(final String userName, final String password) throws AuthenticationFailedException {
+        User_Entity user_entity = userDao.getUserByUserName(userName);
+        if(user_entity == null)
+            throw new AuthenticationFailedException("ATH-001","This username does not exist");
+
+        final String encryptedPassword = passwordCryptographyProvider.encrypt(password, user_entity.getSalt());
+
+        if(encryptedPassword.equals(user_entity.getPassword())){
+           JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+           UserAuth userAuth = new UserAuth();
+
+            final ZonedDateTime now = ZonedDateTime.now();
+            final ZonedDateTime expiresAt = now.plusHours(8);
+
+           userAuth.setAccessToken(jwtTokenProvider.generateToken(user_entity.getUuid(),now,expiresAt));
+           userAuth.setLoginAt(now);
+           userAuth.setExpiresAt(expiresAt);
+
+           userDao.updateAuthToken(userAuth);
+
+            return userAuth;
+
+        }
+        else{
+            throw new AuthenticationFailedException("ATH-002", "Password Failed");
+        }
 
     }
 }
