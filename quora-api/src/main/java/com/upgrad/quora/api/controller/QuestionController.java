@@ -32,8 +32,7 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> createQuestion(QuestionRequest questionRequest,
                                                            @RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
         String[] bearerToken = authorization.split("Bearer: ");
-
-        UserAuthEntity userAuth = authenticateService.getUser(userUUID,bearerToken[1]);
+        UserAuthEntity userAuthEntity = authenticateService.getUserAuth(bearerToken[1]);
         return null;
     }
 

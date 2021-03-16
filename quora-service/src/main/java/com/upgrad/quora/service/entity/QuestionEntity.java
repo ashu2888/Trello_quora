@@ -1,37 +1,30 @@
 package com.upgrad.quora.service.entity;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
+import org.springframework.stereotype.Repository;
 
-@Entity
-@Table(name = "question")
-@NamedQueries(
-        {
-                @NamedQuery(name = "allQuestions", query = "select q from QuestionEntity q"),
-                @NamedQuery(name = "allQuestionsByUser", query = "select q from QuestionEntity q where q.user = :user")
-        }
-)
-public class QuestionEntity implements Serializable {
+import javax.persistence.*;
+import javax.validation.constraints.Size;
+import java.time.LocalTime;
+
+@Repository
+@Table(name="question")
+public class QuestionEntity {
 
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "UUID")
-    @Size(max = 36)
+    @Column(name="uuid")
+    @Size(max=200)
     private String uuid;
 
-    @Column(name = "CONTENT")
-    @NotNull
-    @Size(max = 500)
+    @Column(name="content")
+    @Size(max=200)
     private String content;
 
-    @Column(name = "DATE")
-    private ZonedDateTime date;
+    @Column(name="date")
+    @Size(max=6)
+    private LocalTime date;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -61,11 +54,11 @@ public class QuestionEntity implements Serializable {
         this.content = content;
     }
 
-    public ZonedDateTime getDate() {
+    public LocalTime getDate() {
         return date;
     }
 
-    public void setDate(ZonedDateTime date) {
+    public void setDate(LocalTime date) {
         this.date = date;
     }
 

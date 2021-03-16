@@ -2,16 +2,15 @@ package com.upgrad.quora.service.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(name= "user_auth")
 
 @NamedQueries({
-        @NamedQuery(name = "userByAuthToken", query = "select u from UserAuth u where u.accessToken =:accessToken")
+        @NamedQuery(name = "userByAuthToken", query = "select u from UserAuthEntity u where u.accessToken =:accessToken")
 })
-public class UserAuth {
+public class UserAuthEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -22,7 +21,7 @@ public class UserAuth {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User_Entity user;
+    private UserEntity user;
 
     @Column(name="access_token")
     @Size(max=500)
@@ -55,11 +54,11 @@ public class UserAuth {
         this.uuid = uuid;
     }
 
-    public User_Entity getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User_Entity user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 

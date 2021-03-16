@@ -7,9 +7,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
 @Repository
-@Table(name="question")
-public class Question {
-
+@Table(name= "answer")
+public class AnswerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -18,17 +17,21 @@ public class Question {
     @Size(max=200)
     private String uuid;
 
-    @Column(name="content")
-    @Size(max=200)
-    private String content;
+    @Column(name="ans")
+    @Size(max=255)
+    private String ans;
 
     @Column(name="date")
     @Size(max=6)
     private LocalTime date;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
-    private User_Entity user;
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    @OneToOne
+    @JoinColumn(name = "question_id")
+    private QuestionEntity questionEntity;
 
     public Integer getId() {
         return id;
@@ -46,12 +49,12 @@ public class Question {
         this.uuid = uuid;
     }
 
-    public String getContent() {
-        return content;
+    public String getAns() {
+        return ans;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setAns(String ans) {
+        this.ans = ans;
     }
 
     public LocalTime getDate() {
@@ -62,11 +65,19 @@ public class Question {
         this.date = date;
     }
 
-    public User_Entity getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User_Entity user) {
+    public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public QuestionEntity getQuestion() {
+        return questionEntity;
+    }
+
+    public void setQuestion(QuestionEntity questionEntity) {
+        this.questionEntity = questionEntity;
     }
 }
