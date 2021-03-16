@@ -9,6 +9,7 @@ import com.upgrad.quora.service.entity.User_Entity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,12 +59,17 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> usersignin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
-        byte[] decode = Base64.getDecoder().decode(authorization);
+        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
-        UserAuth userAuthToken = signupBusinessService.signIn(decodedArray[0], decodedArray[1]);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        UserAuth userAuth = signupBusinessService.signIn(decodedArray[0], decodedArray[1]);
+        User_Entity user_entity =userAuth.getUser();
+        SigninResponse signinResponse = new SigninResponse().id(String.valueOf(UUID.fromString(user_entity.getUuid())));
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("access-token",userAuth.getAccessToken());
+
+        return new ResponseEntity<SigninResponse>(signinResponse,headers,HttpStatus.OK);
     }
 
  }

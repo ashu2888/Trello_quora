@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+
 @Service
 public class UserBusinessService {
 
@@ -57,12 +59,26 @@ public class UserBusinessService {
             throw new AuthenticationFailedException("ATH-001","This username does not exist");
 
         final String encryptedPassword = passwordCryptographyProvider.encrypt(password, user_entity.getSalt());
+
         if(encryptedPassword.equals(user_entity.getPassword())){
+           JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+           UserAuth userAuth = new UserAuth();
+
+            final ZonedDateTime now = ZonedDateTime.now();
+            final ZonedDateTime expiresAt = now.plusHours(8);
+
+           userAuth.setAccessToken(jwtTokenProvider.generateToken(user_entity.getUuid(),now,expiresAt));
+           userAuth.setLoginAt(now);
+           userAuth.setExpiresAt(expiresAt);
+
+           userDao.updateAuthToken(userAuth);
+
+            return userAuth;
 
         }
         else{
             throw new AuthenticationFailedException("ATH-002", "Password Failed");
         }
-        return null;
+
     }
 }

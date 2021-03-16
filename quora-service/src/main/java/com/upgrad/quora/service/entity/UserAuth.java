@@ -1,10 +1,9 @@
 package com.upgrad.quora.service.entity;
 
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name= "user_auth")
@@ -31,15 +30,14 @@ public class UserAuth {
 
     @Column(name="expires_at")
     @Size(max=6)
-    private LocalTime expiresAt;
+    private ZonedDateTime expiresAt;
 
     @Column(name="login_at")
-    @Size(max=6)
-    private LocalTime loginAt;
+    private ZonedDateTime loginAt;
 
     @Column(name="logout_at")
     @Size(max=6)
-    private LocalTime logoutAt;
+    private ZonedDateTime logoutAt;
 
     public long getId() {
         return id;
@@ -73,27 +71,27 @@ public class UserAuth {
         this.accessToken = accessToken;
     }
 
-    public LocalTime getExpiresAt() {
+    public @Size(max = 6) ZonedDateTime getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiresAt(LocalTime expiresAt) {
+    public void setExpiresAt(ZonedDateTime expiresAt) {
         this.expiresAt = expiresAt;
     }
 
-    public LocalTime getLoginAt() {
+    public ZonedDateTime getLoginAt() {
         return loginAt;
     }
 
-    public void setLoginAt(LocalTime loginAt) {
+    public void setLoginAt(ZonedDateTime loginAt) {
         this.loginAt = loginAt;
     }
 
-    public LocalTime getLogoutAt() {
+    public ZonedDateTime getLogoutAt() {
         return logoutAt;
     }
 
-    public void setLogoutAt(LocalTime logoutAt) {
+    public void setLogoutAt(ZonedDateTime logoutAt) {
         this.logoutAt = logoutAt;
     }
 }
