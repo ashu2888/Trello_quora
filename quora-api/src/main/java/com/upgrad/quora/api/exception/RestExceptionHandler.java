@@ -36,4 +36,10 @@ public class RestExceptionHandler {
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler(SignOutRestrictedException.class)
+    public ResponseEntity<ErrorResponse> authenticationFailed(SignOutRestrictedException exe , WebRequest request){
+        return new ResponseEntity<ErrorResponse>(
+                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.NOT_FOUND);
+    }
 }
