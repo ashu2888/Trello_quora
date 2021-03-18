@@ -26,7 +26,7 @@ public class AdminController {
         String[] bearer = authorization.split("Bearer ");
         User_Entity user_entity = userBusinessService.deleteUser(userUuid,bearer[1]);
         UserDeleteResponse userDeleteResponce = new UserDeleteResponse().id(user_entity.getUuid()).status("USER SUCCESSFULLY DELETED");
-        return new ResponseEntity<UserDeleteResponse>(userDeleteResponce,HttpStatus.OK);
+        return new ResponseEntity<UserDeleteResponse>(userDeleteResponce,HttpStatus.NO_CONTENT);
     }
 
 
