@@ -61,22 +61,25 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> usersignin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
-        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic")[1]);
+        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
         UserAuth userAuth = userBusinessService.signIn(decodedArray[0], decodedArray[1]);
         User_Entity user_entity =userAuth.getUser();
-        SigninResponse signinResponse = new SigninResponse().id(user_entity.getUuid());
+        SigninResponse signinResponse = new SigninResponse().id(user_entity.getUuid()).message("SIGNED IN SUCCESSFULLY");
         HttpHeaders headers = new HttpHeaders();
         headers.add("access-token",userAuth.getAccessToken());
 
         return new ResponseEntity<SigninResponse>(signinResponse,headers,HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/signout" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout" , consumes =MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignoutResponse> usersignout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
-        User_Entity user_entity = userBusinessService.signOut(authorization);
+        String[] bearerToken = authorization.split("Bearer ");
+
+        User_Entity user_entity = userBusinessService.signOut(bearerToken[1]);
+
         SignoutResponse signoutResponse = new SignoutResponse().id(user_entity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
         return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
 

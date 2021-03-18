@@ -1,5 +1,8 @@
 package com.upgrad.quora.service.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
@@ -22,6 +25,7 @@ public class UserAuth {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User_Entity user;
 
     @Column(name="access_token")
@@ -29,14 +33,13 @@ public class UserAuth {
     private String accessToken;
 
     @Column(name="expires_at")
-    @Size(max=6)
+
     private ZonedDateTime expiresAt;
 
     @Column(name="login_at")
     private ZonedDateTime loginAt;
 
     @Column(name="logout_at")
-    @Size(max=6)
     private ZonedDateTime logoutAt;
 
     public long getId() {
@@ -71,7 +74,7 @@ public class UserAuth {
         this.accessToken = accessToken;
     }
 
-    public @Size(max = 6) ZonedDateTime getExpiresAt() {
+    public  ZonedDateTime getExpiresAt() {
         return expiresAt;
     }
 
