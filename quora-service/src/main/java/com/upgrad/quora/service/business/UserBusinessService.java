@@ -3,9 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuth;
 import com.upgrad.quora.service.entity.User_Entity;
-import com.upgrad.quora.service.exception.AuthenticationFailedException;
-import com.upgrad.quora.service.exception.SignOutRestrictedException;
-import com.upgrad.quora.service.exception.SignUpRestrictedException;
+import com.upgrad.quora.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -99,5 +97,22 @@ public class UserBusinessService {
         userDao.updateAuthToken(userAuth);
 
         return userEntity;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public User_Entity getUser(String uuid, String authorisation) throws AuthorizationFailedException, UserNotFoundException {
+        User_Entity user_entity =userDao.getUserByUserUuid(uuid);
+        if(user_entity==null){
+            throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
+        }
+        UserAuth userAuth = userDao.getUserAuthByToken(authorisation);
+        if(userAuth==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        }
+
+        if(userAuth.getLogoutAt().isBefore(userAuth.getLoginAt())){
+            throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
+        }
+        return  user_entity;
     }
 }
