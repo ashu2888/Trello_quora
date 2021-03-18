@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Service
 public class UserBusinessService {
@@ -71,6 +72,8 @@ public class UserBusinessService {
            userAuth.setLoginAt(now);
            userAuth.setExpiresAt(expiresAt);
 
+           userAuth.setUuid(user_entity.getUuid());
+           userAuth.setUser(user_entity);
            userDao.updateAuthToken(userAuth);
 
             return userAuth;
@@ -100,8 +103,9 @@ public class UserBusinessService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public User_Entity getUser(String uuid, String authorisation) throws AuthorizationFailedException, UserNotFoundException {
-        User_Entity user_entity =userDao.getUserByUserUuid(uuid);
+    public User_Entity getUser( String userUuid,String authorisation) throws AuthorizationFailedException, UserNotFoundException {
+
+        User_Entity user_entity =userDao.getUserByUserUuid(userUuid);
         if(user_entity==null){
             throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
         }
@@ -113,6 +117,28 @@ public class UserBusinessService {
         if(userAuth.getLogoutAt().isBefore(userAuth.getLoginAt())){
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
         }
+        return  user_entity;
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public User_Entity deleteUser(String uuid, String authorisation) throws AuthorizationFailedException,UserNotFoundException {
+        User_Entity user_entity =userDao.getUserByUserUuid(uuid);
+        if(user_entity==null){
+            throw new UserNotFoundException("USR-001","User with entered uuid to be deleted does not exist");
+        }
+        UserAuth userAuth = userDao.getUserAuthByToken(authorisation);
+        if(userAuth==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        }
+
+        if(userAuth.getLogoutAt().isAfter(userAuth.getLoginAt())){
+            throw new AuthorizationFailedException("ATHR-002","User is signed out.");
+        }
+        if(user_entity.getRole().equals("nonadmin")){
+            throw new AuthorizationFailedException("ATHR-003","Unauthorized Access, Entered user is not an admin.");
+            }
+        userDao.deleteUser(user_entity);
         return  user_entity;
     }
 }

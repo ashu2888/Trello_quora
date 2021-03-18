@@ -84,4 +84,13 @@ public class UserDao {
             return null;
         }
     }
+
+    public User_Entity deleteUser(User_Entity userEntity) {
+        try {
+           entityManager.remove(userEntity);
+            return userEntity;
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
 }
