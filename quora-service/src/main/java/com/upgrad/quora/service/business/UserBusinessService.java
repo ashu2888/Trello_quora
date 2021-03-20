@@ -104,14 +104,20 @@ public class UserBusinessService {
         if(user_entity==null){
             throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
         }
-        UserAuthEntity userAuthEntity = userDao.getUserAuthByToken(authorisation);
-        if(userAuthEntity ==null){
-            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
-        }
-
+        UserAuthEntity userAuthEntity = getUserAuth(authorisation);
         if(userAuthEntity.getLogoutAt().isBefore(userAuthEntity.getLoginAt())){
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
         }
         return  user_entity;
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserAuthEntity getUserAuth(String authorisation) throws AuthorizationFailedException {
+        UserAuthEntity userAuthEntity = userDao.getUserAuthByToken(authorisation);
+        if(userAuthEntity ==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
+        }
+        return userAuthEntity;
+    }
+
 }
