@@ -3,6 +3,7 @@ package com.upgrad.quora.service.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Class for creating user table in database.
@@ -175,5 +176,16 @@ public class UserEntity implements Serializable {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    @OneToMany(mappedBy = "user")
+    private Collection<UserAuthEntity> userAuthEntity;
+
+    public Collection<UserAuthEntity> getUserAuthEntity() {
+        return userAuthEntity;
+    }
+
+    public void setUserAuthEntity(Collection<UserAuthEntity> userAuthEntity) {
+        this.userAuthEntity = userAuthEntity;
     }
 }

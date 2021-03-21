@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
 
 @Repository
 public class UserDao {
@@ -47,8 +48,13 @@ public class UserDao {
      * @return instance of user
      */
     public UserEntity createUser(UserEntity userEntity) {
-        entityManager.persist(userEntity);
-        return userEntity;
+        try {
+            entityManager.persist(userEntity);
+            return userEntity;
+        }catch (ConstraintViolationException exe){
+            return null;
+        }
+
     }
 
     /**
