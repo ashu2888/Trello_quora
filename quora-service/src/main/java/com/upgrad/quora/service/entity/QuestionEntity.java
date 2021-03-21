@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.ZonedDateTime;
+import java.io.Serializable;
 
 @Repository
 @Table(name="question")
@@ -13,7 +14,7 @@ import java.time.ZonedDateTime;
         @NamedQuery(name = "questionByUser", query = "select q from QuestionEntity q where q.user = :user"),
         @NamedQuery(name = "allQuestions", query = "select q from QuestionEntity q")
 })
-public class QuestionEntity {
+public class QuestionEntity  implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

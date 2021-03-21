@@ -11,15 +11,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/")
 public class CommonController {
     @Autowired
     private UserBusinessService userBusinessService;
+    /**
+     *  This controller class returns the details about the user with uuid and access token provided in the http Request.
+     *  It accepts http GET method and throws AuthorizationFailedException when user is signout or not signin.
+     *  It throws  UserNotFoundException when user with given uuid is not exist in users entity table.
+     */
 
-    @RequestMapping(method = RequestMethod.GET, path="/userprofile/{userId}",consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , UserNotFoundException {
-        UserEntity userEntity = userBusinessService.getUser(userUuid, authorization);
+    @RequestMapping(method = RequestMethod.GET, path="/userprofile/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+        String[] bearer = authorization.split("Bearer ");
+        UserEntity userEntity = userBusinessService.getUser(userUuid, bearer[1]);
 
         UserDetailsResponse userDetailsResponse = new UserDetailsResponse()
                 .firstName(userEntity.getFirstName())

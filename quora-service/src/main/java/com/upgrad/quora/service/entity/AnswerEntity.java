@@ -4,11 +4,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalTime;
 
 @Repository
 @Table(name= "answer")
-public class AnswerEntity {
+public class AnswerEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolationException;
 
 @Repository
 public class UserDao {
@@ -14,9 +15,10 @@ public class UserDao {
     private EntityManager entityManager;
 
     /**
-     * This method extracts data from db using emailid from users table.
+     * Method  extracts data from db using userByEmail named query with email as parameter from users table.
+     * Method calls createNamedQuery of entityManager class.
      * @param email
-     * @return
+     * @return instance of user
      */
     public UserEntity getUserByEmail(final String email) {
         try {
@@ -27,9 +29,10 @@ public class UserDao {
     }
 
     /**
-     * This method extracts data from db using first name of user from users table.
+     * Method  extracts data from db using userByName named query with firstName as parameter from users table.
+     * Method calls createNamedQuery of entityManager class.
      * @param firstName
-     * @return
+     * @return instance of user
      */
     public UserEntity getUserByName(final String firstName) {
         try {
@@ -40,19 +43,24 @@ public class UserDao {
     }
 
     /**
-     * Method for inserting data into database
+     * Method for persisting data into database.Method calls createNamedQuery of entityManager class.
      * @param userEntity
-     * @return
+     * @return instance of user
      */
     public UserEntity createUser(UserEntity userEntity) {
-        entityManager.persist(userEntity);
-        return userEntity;
+        try {
+            entityManager.persist(userEntity);
+            return userEntity;
+        }catch (ConstraintViolationException exe){
+            return null;
+        }
+
     }
 
     /**
-     * Method for extracting data from users table with userName
+     * Method for extracting data from users table using userByUsername named query with userName as parameter. Method calls createNamedQuery of entityManager class.
      * @param userName
-     * @return
+     * @return instance of user
      */
     public UserEntity getUserByUserName(final String userName) {
         try {
@@ -62,12 +70,22 @@ public class UserDao {
         }
     }
 
+    /**
+     *  Method for updating the user authentication table. Method calls merge method of entityManager class.
+     * @param authEntity
+     * @return instance of user authentication
+     */
     public UserAuthEntity updateAuthToken(UserAuthEntity authEntity) {
 
         entityManager.merge(authEntity);
         return authEntity;
     }
 
+    /**
+     * Method for extracting data from user authentication table with access token using userByAuthToken named query. Method calls createNamedQuery of entityManager class.
+     * @param accessToken
+     * @return instance of user authentication
+     */
     public UserAuthEntity getUserAuthByToken(String accessToken) {
 
         try {
@@ -77,9 +95,29 @@ public class UserDao {
         }
 
     }
+
+    /**
+     * Method for extracting data from users table using userByUseruuid named query with uuid as parameter. Method calls createNamedQuery of entityManager class.
+     * @param userUuid
+     * @return instance of user entity
+     */
     public UserEntity getUserByUserUuid(final String userUuid) {
         try {
             return entityManager.createNamedQuery("userByUseruuid", UserEntity.class).setParameter("uuid", userUuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    /**
+     * Method deletes the entry for user and user authentication with the help of entity manager's remove method.
+     * @param userEntity
+     * @return instance of user entity
+     */
+    public UserEntity deleteUser(UserEntity userEntity) {
+        try {
+            entityManager.remove(userEntity);
+            return userEntity;
         } catch (NoResultException nre) {
             return null;
         }

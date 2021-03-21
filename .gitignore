@@ -2,7 +2,8 @@
 target/
 */target/
 
-# Ignore the ide specific files
-.idea/
-.vscode/
-*.sw*
+
+ # Ignore the ide specific files
+ .idea/
+ .vscode/
+ *.sw*

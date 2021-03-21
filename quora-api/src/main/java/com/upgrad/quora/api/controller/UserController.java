@@ -30,9 +30,10 @@ public class UserController {
     private UserBusinessService userBusinessService;
 
     /**
-     * Controller method for the sign up end point.
+     * Method for user sign up. Http method type is Post, end point is "/user/signup", consumes json file and produces out put in json format.
+     * Checks for the existing username and email id if not available throws SignUpRestrictedException otherwise creates user entity in the database.
      * @param signupUserRequest
-     * @return
+     * @return SignupUserResponse
      * @throws SignUpRestrictedException
      */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -59,26 +60,43 @@ public class UserController {
         return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
     }
 
+    /**
+     * Method for user sign in. Http method type is Post, end point is "/user/signin", consumes json file and produces out put in json format.
+     * Creates access token using base 64.
+     * Checks for the username and password if not available throws AuthenticationFailedException otherwise creates entry in the user authentication table.
+     * @return SigninResponse
+     * @throws AuthenticationFailedException
+     */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> usersignin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
-        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic")[1]);
+        byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
         UserAuthEntity userAuthEntity = userBusinessService.signIn(decodedArray[0], decodedArray[1]);
-        UserEntity user_entity = userAuthEntity.getUser();
-        SigninResponse signinResponse = new SigninResponse().id(user_entity.getUuid());
+        UserEntity user_Auth_entity = userAuthEntity.getUser();
+        SigninResponse signinResponse = new SigninResponse().id(user_Auth_entity.getUuid()).message("SIGNED IN SUCCESSFULLY");
         HttpHeaders headers = new HttpHeaders();
         headers.add("access-token", userAuthEntity.getAccessToken());
 
         return new ResponseEntity<SigninResponse>(signinResponse,headers,HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/user/signout" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    /**
+     * Method for user sign out. Http method is POST, end point is "/user/signout", takes json file as input and produces json file as output.
+     * Checks whether user is signedin or not and if not signed in then throws SignOutRestrictedException exception
+     * @param authorization
+     * @return SignoutResponse
+     * @throws SignOutRestrictedException
+     */
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout" , consumes =MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignoutResponse> usersignout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
-        UserEntity user_entity = userBusinessService.signOut(authorization);
-        SignoutResponse signoutResponse = new SignoutResponse().id(user_entity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+        String[] bearerToken = authorization.split("Bearer ");
+
+        UserEntity user_Auth_entity = userBusinessService.signOut(bearerToken[1]);
+
+        SignoutResponse signoutResponse = new SignoutResponse().id(user_Auth_entity.getUuid()).message("SIGNED OUT SUCCESSFULLY");
         return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
 
     }
- }
+}
