@@ -40,17 +40,25 @@ public class QuestionDao {
      * merges the question object in the databse
      * @param questionEntity
      */
-    public void updateQuestion(QuestionEntity questionEntity) {
+    public void updateQuestion(final QuestionEntity questionEntity) {
         entityManager.merge(questionEntity);
     }
 
     /**
      * Deletes the question corresponding to the question id
-     * @param questionId
+     * @param questionUUID
      */
-    public void deleteQuestion(Integer questionId) {
-        QuestionEntity questionEntity = entityManager.find(QuestionEntity.class, questionId);
+    public void deleteQuestion(final String questionUUID) {
+        QuestionEntity questionEntity = entityManager.find(QuestionEntity.class, questionUUID);
         entityManager.remove(questionEntity);
+    }
+
+    /**
+     * Get the question corresponding to the question id
+     * @param questionUUID
+     */
+    public QuestionEntity getQuestion(final String questionUUID) {
+        return entityManager.find(QuestionEntity.class, questionUUID);
     }
 
     /**
@@ -59,7 +67,7 @@ public class QuestionDao {
      * @return list of Question objects
      */
     public List<QuestionEntity> getAllQuestionsByUser(UserEntity user) {
-        return entityManager.createNamedQuery("allQuestions",QuestionEntity.class).setParameter("user",user).getResultList();
+        return entityManager.createNamedQuery("questionByUser",QuestionEntity.class).setParameter("user",user).getResultList();
     }
 
 

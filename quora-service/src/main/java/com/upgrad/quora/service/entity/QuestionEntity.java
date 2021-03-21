@@ -4,10 +4,15 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 @Repository
 @Table(name="question")
+@NamedQueries({
+        @NamedQuery(name = "questionByUuid", query = "select q from QuestionEntity q where q.uuid = :uuid"),
+        @NamedQuery(name = "questionByUser", query = "select q from QuestionEntity q where q.user = :user"),
+        @NamedQuery(name = "allQuestions", query = "select q from QuestionEntity q")
+})
 public class QuestionEntity {
 
     @Id
@@ -23,8 +28,7 @@ public class QuestionEntity {
     private String content;
 
     @Column(name="date")
-    @Size(max=6)
-    private LocalTime date;
+    private ZonedDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -54,11 +58,11 @@ public class QuestionEntity {
         this.content = content;
     }
 
-    public LocalTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
