@@ -3,6 +3,7 @@ package com.upgrad.quora.service.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * Class for creating user table in database.
@@ -12,12 +13,13 @@ import java.io.Serializable;
 
 // queries for extracting data from database
 @NamedQueries({
-        @NamedQuery(name = "userByEmail", query = "select u from User_Entity u where u.email = :email"),
-        @NamedQuery(name = "userByUuid", query = "select u from User_Entity u where u.uuid = :uuid"),
-        @NamedQuery(name = "userByName", query = "select u from User_Entity u where u.firstName = :firstName"),
-        @NamedQuery(name = "userByUsername", query = "select u from User_Entity u where u.userName = :userName")
+        @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email = :email"),
+        @NamedQuery(name = "userByUuid", query = "select u from UserEntity u where u.uuid = :uuid"),
+        @NamedQuery(name = "userByName", query = "select u from UserEntity u where u.firstName = :firstName"),
+        @NamedQuery(name = "userByUsername", query = "select u from UserEntity u where u.userName = :userName"),
+        @NamedQuery(name = "userByUseruuid", query = "select u from UserEntity u where u.uuid = :uuid")
 })
-public class User_Entity implements Serializable {
+public class UserEntity implements Serializable {
 
     @Id
     @Column(name="id")
@@ -174,5 +176,16 @@ public class User_Entity implements Serializable {
 
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
+    }
+
+    @OneToMany(mappedBy = "user")
+    private Collection<UserAuthEntity> userAuthEntity;
+
+    public Collection<UserAuthEntity> getUserAuthEntity() {
+        return userAuthEntity;
+    }
+
+    public void setUserAuthEntity(Collection<UserAuthEntity> userAuthEntity) {
+        this.userAuthEntity = userAuthEntity;
     }
 }
