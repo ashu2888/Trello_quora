@@ -2,7 +2,7 @@ package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.UserDetailsResponse;
 import com.upgrad.quora.service.business.UserBusinessService;
-import com.upgrad.quora.service.entity.User_Entity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +11,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 
 @RestController
 @RequestMapping("/")
 public class CommonController {
     @Autowired
     private UserBusinessService userBusinessService;
+    /**
+     *  This controller class returns the details about the user with uuid and access token provided in the http Request.
+     *  It accepts http GET method and throws AuthorizationFailedException when user is signout or not signin.
+     *  It throws  UserNotFoundException when user with given uuid is not exist in users entity table.
+     */
 
     @RequestMapping(method = RequestMethod.GET, path="/userprofile/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , UserNotFoundException {
         String[] bearer = authorization.split("Bearer ");
-        User_Entity userEntity = userBusinessService.getUser(userUuid, bearer[1]);
+        UserEntity userEntity = userBusinessService.getUser(userUuid, bearer[1]);
 
         UserDetailsResponse userDetailsResponse = new UserDetailsResponse()
                 .firstName(userEntity.getFirstName())

@@ -4,11 +4,12 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalTime;
 
 @Repository
 @Table(name="question")
-public class Question {
+public class QuestionEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,7 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
-    private User_Entity user;
+    private UserEntity user;
 
     public Integer getId() {
         return id;
@@ -62,11 +63,11 @@ public class Question {
         this.date = date;
     }
 
-    public User_Entity getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User_Entity user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 }
