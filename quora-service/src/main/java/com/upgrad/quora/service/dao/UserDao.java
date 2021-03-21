@@ -1,7 +1,7 @@
 package com.upgrad.quora.service.dao;
 
-import com.upgrad.quora.service.entity.UserAuth;
-import com.upgrad.quora.service.entity.User_Entity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,80 +14,103 @@ public class UserDao {
     private EntityManager entityManager;
 
     /**
-     * This method extracts data from db using emailid from users table.
+     * Method  extracts data from db using userByEmail named query with email as parameter from users table.
+     * Method calls createNamedQuery of entityManager class.
      * @param email
-     * @return
+     * @return instance of user
      */
-    public User_Entity getUserByEmail(final String email) {
+    public UserEntity getUserByEmail(final String email) {
         try {
-            return entityManager.createNamedQuery("userByEmail", User_Entity.class).setParameter("email", email).getSingleResult();
+            return entityManager.createNamedQuery("userByEmail", UserEntity.class).setParameter("email", email).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
     /**
-     * This method extracts data from db using first name of user from users table.
+     * Method  extracts data from db using userByName named query with firstName as parameter from users table.
+     * Method calls createNamedQuery of entityManager class.
      * @param firstName
-     * @return
+     * @return instance of user
      */
-    public User_Entity getUserByName(final String firstName) {
+    public UserEntity getUserByName(final String firstName) {
         try {
-            return entityManager.createNamedQuery("userByName", User_Entity.class).setParameter("firstName", firstName).getSingleResult();
+            return entityManager.createNamedQuery("userByName", UserEntity.class).setParameter("firstName", firstName).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
     /**
-     * Method for inserting data into database
+     * Method for persisting data into database.Method calls createNamedQuery of entityManager class.
      * @param userEntity
-     * @return
+     * @return instance of user
      */
-    public User_Entity createUser(User_Entity userEntity) {
+    public UserEntity createUser(UserEntity userEntity) {
         entityManager.persist(userEntity);
         return userEntity;
     }
 
     /**
-     * Method for extracting data from users table with userName
+     * Method for extracting data from users table using userByUsername named query with userName as parameter. Method calls createNamedQuery of entityManager class.
      * @param userName
-     * @return
+     * @return instance of user
      */
-    public User_Entity getUserByUserName(final String userName) {
+    public UserEntity getUserByUserName(final String userName) {
         try {
-            return entityManager.createNamedQuery("userByUsername", User_Entity.class).setParameter("userName", userName).getSingleResult();
+            return entityManager.createNamedQuery("userByUsername", UserEntity.class).setParameter("userName", userName).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
-    public UserAuth updateAuthToken(UserAuth authEntity) {
+    /**
+     *  Method for updating the user authentication table. Method calls merge method of entityManager class.
+     * @param authEntity
+     * @return instance of user authentication
+     */
+    public UserAuthEntity updateAuthToken(UserAuthEntity authEntity) {
 
         entityManager.merge(authEntity);
         return authEntity;
     }
 
-    public UserAuth getUserAuthByToken(String accessToken) {
+    /**
+     * Method for extracting data from user authentication table with access token using userByAuthToken named query. Method calls createNamedQuery of entityManager class.
+     * @param accessToken
+     * @return instance of user authentication
+     */
+    public UserAuthEntity getUserAuthByToken(String accessToken) {
 
         try {
-            return entityManager.createNamedQuery("userByAuthToken", UserAuth.class).setParameter("accessToken", accessToken).getSingleResult();
+            return entityManager.createNamedQuery("userByAuthToken", UserAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
 
     }
-    public User_Entity getUserByUserUuid(final String userUuid) {
+
+    /**
+     * Method for extracting data from users table using userByUseruuid named query with uuid as parameter. Method calls createNamedQuery of entityManager class.
+     * @param userUuid
+     * @return instance of user entity
+     */
+    public UserEntity getUserByUserUuid(final String userUuid) {
         try {
-            return entityManager.createNamedQuery("userByUseruuid", User_Entity.class).setParameter("uuid", userUuid).getSingleResult();
+            return entityManager.createNamedQuery("userByUseruuid", UserEntity.class).setParameter("uuid", userUuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
-    public User_Entity deleteUser(User_Entity userEntity) {
+    /**
+     * Method deletes the entry for user and user authentication with the help of entity manager's remove method.
+     * @param userEntity
+     * @return instance of user entity
+     */
+    public UserEntity deleteUser(UserEntity userEntity) {
         try {
-           entityManager.remove(userEntity);
+            entityManager.remove(userEntity);
             return userEntity;
         } catch (NoResultException nre) {
             return null;

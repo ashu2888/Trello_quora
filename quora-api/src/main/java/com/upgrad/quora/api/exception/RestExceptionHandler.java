@@ -7,14 +7,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-@ControllerAdvice
 /**
- * Method for telling controller class to display custom message when exception thrown by service class
+ * This class gives information to the controller class what messeges to be displayed  when exception thrown by service class
  */
+@ControllerAdvice
+
 public class RestExceptionHandler {
     /**
-     * Method for telling controller class to display custom message when SignUpRestrictedException thrown by service class
+     *
+     * @param exe
+     * @param request
+     * @return ErrorResponse
      */
     @ExceptionHandler(SignUpRestrictedException.class)
     public ResponseEntity<ErrorResponse> signUpRestriction(SignUpRestrictedException exe , WebRequest request){
@@ -34,6 +37,12 @@ public class RestExceptionHandler {
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.NOT_FOUND);
     }
 
+    /**
+     *
+     * @param exe
+     * @param request
+     * @return ErrorResponse
+     */
 
     @ExceptionHandler(SignOutRestrictedException.class)
     public ResponseEntity<ErrorResponse> authenticationFailed(SignOutRestrictedException exe , WebRequest request){
@@ -41,12 +50,24 @@ public class RestExceptionHandler {
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.NOT_FOUND);
     }
 
+    /**
+     *
+     * @param exe
+     * @param request
+     * @return ErrorResponse
+     */
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> userNotFoundException(UserNotFoundException exe , WebRequest request){
         return new ResponseEntity<ErrorResponse>(
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.NOT_FOUND);
     }
 
+    /**
+     *
+     * @param exe
+     * @param request
+     * @return ErrorResponse
+     */
     @ExceptionHandler(AuthorizationFailedException.class)
     public ResponseEntity<ErrorResponse> authorizationFailedException(AuthorizationFailedException exe , WebRequest request){
         return new ResponseEntity<ErrorResponse>(
