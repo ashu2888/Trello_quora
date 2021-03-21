@@ -124,15 +124,15 @@ public class UserBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUser(String userUuid, String authorisation) throws AuthorizationFailedException, UserNotFoundException {
 
-        UserEntity user_Auth_entity =userDao.getUserByUserUuid(userUuid);
-        if(user_Auth_entity ==null){
+        UserEntity userEntity =userDao.getUserByUserUuid(userUuid);
+        if(userEntity ==null){
             throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
         }
         UserAuthEntity userAuthEntity = getUserAuth(authorisation);
-        if(userAuthEntity.getLogoutAt().isBefore(userAuthEntity.getLoginAt())){
+        if(userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLoginAt())){
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
         }
-        return user_Auth_entity;
+        return userEntity;
     }
 
     /**

@@ -82,8 +82,13 @@ public class RestExceptionHandler {
      */
     @ExceptionHandler(InvalidQuestionException.class)
     public ResponseEntity<ErrorResponse> invalidQuestionException(InvalidQuestionException exception, WebRequest request)  {
-        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).
-                message(exception.getErrorMessage()), HttpStatus.NOT_FOUND);
+        if (exception.getCode().equals("QUES-001")) {
+            return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).
+                    message(exception.getErrorMessage()), HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).
+                    message(exception.getErrorMessage()), HttpStatus.FORBIDDEN);
+        }
     }
     /**
      * Handler for AnswerNotFoundException

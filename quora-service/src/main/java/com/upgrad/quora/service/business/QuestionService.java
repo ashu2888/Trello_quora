@@ -4,6 +4,7 @@ import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,12 @@ public class QuestionService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity getQuestion(final String questionUUID) {
-        return questionDao.getQuestion(questionUUID);
+        try {
+            QuestionEntity questionEntity = questionDao.getQuestion(questionUUID);
+            return questionEntity;
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

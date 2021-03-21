@@ -41,7 +41,7 @@ public class QuestionController {
                                                            @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
         String[] bearerToken = authorization.split("Bearer ");
         UserAuthEntity userAuthEntity = userBusinessService.getUserAuth(bearerToken[1]);
-        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isBefore(userAuthEntity.getLoginAt())) {
+        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLoginAt())) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to post a question");
         }
         QuestionEntity questionEntity = new QuestionEntity();
@@ -58,7 +58,7 @@ public class QuestionController {
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
         String[] bearerToken = authorization.split("Bearer ");
         UserAuthEntity userAuthEntity = userBusinessService.getUserAuth(bearerToken[1]);
-        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isBefore(userAuthEntity.getLoginAt())) {
+        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLoginAt())) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get all questions");
         }
         List<QuestionEntity> allQuestions = questionService.getAllQuestions();
@@ -79,7 +79,7 @@ public class QuestionController {
                                                                     @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
         String[] bearerToken = authorization.split("Bearer ");
         UserAuthEntity userAuthEntity = userBusinessService.getUserAuth(bearerToken[1]);
-        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isBefore(userAuthEntity.getLoginAt())) {
+        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLoginAt())) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to edit the question");
         }
         QuestionEntity questionEntity = questionService.getQuestion(questionId);
@@ -101,7 +101,7 @@ public class QuestionController {
                                                            @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException,InvalidQuestionException {
         String[] bearerToken = authorization.split("Bearer ");
         UserAuthEntity userAuthEntity = userBusinessService.getUserAuth(bearerToken[1]);
-        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isBefore(userAuthEntity.getLoginAt())) {
+        if (userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLoginAt())) {
             throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to delete a question");
         }
         QuestionEntity questionEntity = questionService.getQuestion(questionId);
