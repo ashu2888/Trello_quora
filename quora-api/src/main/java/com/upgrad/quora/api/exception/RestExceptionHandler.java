@@ -71,6 +71,29 @@ public class RestExceptionHandler {
     @ExceptionHandler(AuthorizationFailedException.class)
     public ResponseEntity<ErrorResponse> authorizationFailedException(AuthorizationFailedException exe , WebRequest request){
         return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.NOT_FOUND);
+                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Handler for InvalidQuestionException
+     * @param exception
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(InvalidQuestionException.class)
+    public ResponseEntity<ErrorResponse> invalidQuestionException(InvalidQuestionException exception, WebRequest request)  {
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).
+                message(exception.getErrorMessage()), HttpStatus.NOT_FOUND);
+    }
+    /**
+     * Handler for AnswerNotFoundException
+     * @param exception
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(AnswerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> answerNotFoundException(AnswerNotFoundException exception , WebRequest request){
+        return new ResponseEntity<ErrorResponse>(
+                new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()),HttpStatus.NOT_FOUND);
     }
 }
