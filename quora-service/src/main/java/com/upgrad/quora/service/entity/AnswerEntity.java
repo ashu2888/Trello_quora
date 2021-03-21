@@ -1,13 +1,11 @@
 package com.upgrad.quora.service.entity;
 
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalTime;
 
-@Repository
+@Entity
 @Table(name= "answer")
 public class AnswerEntity implements Serializable {
     @Id

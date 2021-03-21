@@ -32,7 +32,7 @@ public class UserBusinessService {
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signup(UserEntity userEntity) throws SignUpRestrictedException {
 
-        if(userDao.getUserByName(userEntity.getFirstName())!=null) {
+        if(userDao.getUserByName(userEntity.getUserName())!=null) {
             throw new SignUpRestrictedException("SGR-001","Try any other Username, this Username has already been taken");
         }
 

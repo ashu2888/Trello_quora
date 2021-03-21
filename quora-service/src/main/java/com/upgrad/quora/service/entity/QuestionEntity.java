@@ -1,13 +1,11 @@
 package com.upgrad.quora.service.entity;
 
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.time.ZonedDateTime;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
-@Repository
+@Entity
 @Table(name="question")
 @NamedQueries({
         @NamedQuery(name = "questionByUuid", query = "select q from QuestionEntity q where q.uuid = :uuid"),

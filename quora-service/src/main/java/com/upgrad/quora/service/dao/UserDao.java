@@ -31,12 +31,12 @@ public class UserDao {
     /**
      * Method  extracts data from db using userByName named query with firstName as parameter from users table.
      * Method calls createNamedQuery of entityManager class.
-     * @param firstName
+     * @param userName
      * @return instance of user
      */
-    public UserEntity getUserByName(final String firstName) {
+    public UserEntity getUserByName(final String userName) {
         try {
-            return entityManager.createNamedQuery("userByName", UserEntity.class).setParameter("firstName", firstName).getSingleResult();
+            return entityManager.createNamedQuery("userByUsername", UserEntity.class).setParameter("userName", userName).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

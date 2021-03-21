@@ -49,7 +49,7 @@ public class QuestionDao {
      * @param questionUUID
      */
     public void deleteQuestion(final String questionUUID) {
-        QuestionEntity questionEntity = entityManager.find(QuestionEntity.class, questionUUID);
+        QuestionEntity questionEntity = getQuestion(questionUUID);
         entityManager.remove(questionEntity);
     }
 
@@ -58,7 +58,8 @@ public class QuestionDao {
      * @param questionUUID
      */
     public QuestionEntity getQuestion(final String questionUUID) {
-        return entityManager.find(QuestionEntity.class, questionUUID);
+        return entityManager.createNamedQuery("questionByUuid",QuestionEntity.class).
+                setParameter("uuid",questionUUID).getSingleResult();
     }
 
     /**
