@@ -57,25 +57,25 @@ public class UserBusinessService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity signIn(final String userName, final String password) throws AuthenticationFailedException {
-        UserEntity user_Auth_entity = userDao.getUserByUserName(userName);
-        if(user_Auth_entity == null)
+        UserEntity userEntity = userDao.getUserByUserName(userName);
+        if(userEntity == null)
             throw new AuthenticationFailedException("ATH-001","This username does not exist");
 
-        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, user_Auth_entity.getSalt());
+        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
 
-        if(encryptedPassword.equals(user_Auth_entity.getPassword())){
+        if(encryptedPassword.equals(userEntity.getPassword())){
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthEntity = new UserAuthEntity();
 
             final ZonedDateTime now = ZonedDateTime.now();
             final ZonedDateTime expiresAt = now.plusHours(8);
 
-            userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(user_Auth_entity.getUuid(),now,expiresAt));
+            userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(),now,expiresAt));
             userAuthEntity.setLoginAt(now);
             userAuthEntity.setExpiresAt(expiresAt);
 
-            userAuthEntity.setUuid(user_Auth_entity.getUuid());
-            userAuthEntity.setUser(user_Auth_entity);
+            userAuthEntity.setUuid(userEntity.getUuid());
+            userAuthEntity.setUser(userEntity);
             userDao.updateAuthToken(userAuthEntity);
 
             return userAuthEntity;
@@ -163,26 +163,26 @@ public class UserBusinessService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity deleteUser(String uuid, String authorisation) throws AuthorizationFailedException,UserNotFoundException {
-        UserEntity user_Auth_entity =userDao.getUserByUserUuid(uuid);
-        if(user_Auth_entity ==null){
+        UserEntity userEntity =userDao.getUserByUserUuid(uuid);
+        if(userEntity ==null){
             throw new UserNotFoundException("USR-001","User with entered uuid to be deleted does not exist");
         }
 
         UserAuthEntity userAuthEntity = userDao.getUserAuthByToken(authorisation);
         if(userAuthEntity ==null){
-            throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
         }
 
         if(userAuthEntity.getLogoutAt()!=null){
-            throw new AuthorizationFailedException("ATHR-002","User is signed out.");
+            throw new AuthorizationFailedException("ATHR-002","User is signed out");
         }
 
 
-        if(user_Auth_entity.getRole().equals("nonadmin")){
-            throw new AuthorizationFailedException("ATHR-003","Unauthorized Access, Entered user is not an admin.");
+        if(userEntity.getRole().equals("nonadmin")){
+            throw new AuthorizationFailedException("ATHR-003","Unauthorized Access, Entered user is not an admin");
         }
 
-        userDao.deleteUser(user_Auth_entity);
-        return user_Auth_entity;
+        userDao.deleteUser(userEntity);
+        return userEntity;
     }
 }

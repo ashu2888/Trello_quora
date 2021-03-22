@@ -84,8 +84,8 @@ public class AnswerController {
 
         // Return response with created answer entity
         final AnswerEntity editAnswerEntity =  answerBusinessService.editAnswer(answerEntity, uuid, bearerToken);
-        AnswerResponse answerResponse = new AnswerResponse().id(editAnswerEntity.getUuid()).status("ANSWER CREATED");
-        return new ResponseEntity<>(answerResponse, HttpStatus.CREATED);
+        AnswerResponse answerResponse = new AnswerResponse().id(editAnswerEntity.getUuid()).status("ANSWER EDITED");
+        return new ResponseEntity<>(answerResponse, HttpStatus.OK);
 
     }
 

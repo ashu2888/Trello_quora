@@ -11,20 +11,31 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+/**
+ * @author Madhuri
+ * Class implementing the endpoint to get user details
+ */
 @RestController
 @RequestMapping("/")
 public class CommonController {
     @Autowired
     private UserBusinessService userBusinessService;
     /**
-     *  This controller class returns the details about the user with uuid and access token provided in the http Request.
-     *  It accepts http GET method and throws AuthorizationFailedException when user is signout or not signin.
-     *  It throws  UserNotFoundException when user with given uuid is not exist in users entity table.
+     * This controller class returns the details about the user with uuid and access token provided in the http Request.
+     * It accepts http GET method and throws AuthorizationFailedException when user is signout or not signin.
+     * It throws  UserNotFoundException when user with given uuid is not exist in users entity table.
+     * @param userUuid
+     * @param authorization
+     * @return UserDetailsResponse
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
      */
-
-    @RequestMapping(method = RequestMethod.GET, path="/userprofile/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , UserNotFoundException {
+    @RequestMapping(method = RequestMethod.GET,
+            path="/userprofile/{userId}",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid,
+                                                       @RequestHeader("authorization") final String authorization)
+            throws AuthorizationFailedException , UserNotFoundException {
         String[] bearer = authorization.split("Bearer ");
         UserEntity userEntity = userBusinessService.getUser(userUuid, bearer[1]);
 
