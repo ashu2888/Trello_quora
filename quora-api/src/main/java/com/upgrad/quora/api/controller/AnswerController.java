@@ -2,6 +2,8 @@ package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.AnswerRequest;
 import com.upgrad.quora.api.model.AnswerResponse;
+import com.upgrad.quora.api.model.AnswerDeleteResponse;
+import com.upgrad.quora.api.model.AnswerDetailsResponse;
 import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.exception.AnswerNotFoundException;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author vipin mohan
@@ -89,4 +93,45 @@ public class AnswerController {
 
     }
 
+    /**
+     * @author Ashish Vats
+     * Class implementing the endpoints for the Delete Answer
+     */
+
+    @RequestMapping(method = RequestMethod.DELETE, path = "/answer/delete/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerDeleteResponse> deleteAnswer(@PathVariable("answerId") final String answerId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AnswerNotFoundException {
+
+        // Delete requested answer
+        answerBusinessService.deleteAnswer(answerId, authorization);
+
+        // Return response
+        AnswerDeleteResponse answerDeleteResponse = new AnswerDeleteResponse().id(answerId).status("ANSWER DELETED");
+        return new ResponseEntity<AnswerDeleteResponse>(answerDeleteResponse, HttpStatus.OK);
+    }
+
+    /**
+     * @author Ashish Vats
+     * Class implementing the endpoints for the Get All Answers to Question
+     */
+
+    @RequestMapping(method = RequestMethod.GET, path = "/answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion (@PathVariable("questionId") final String questionId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
+
+        // Get all answers for requested question
+        List<AnswerEntity> allAnswers = answerBusinessService.getAllAnswersToQuestion(questionId, authorization);
+
+        // Create response
+        List<AnswerDetailsResponse> allAnswersResponse = new ArrayList<AnswerDetailsResponse>();
+
+        for (int i = 0; i < allAnswers.size(); i++) {
+            AnswerDetailsResponse answerDetailsResponse = new AnswerDetailsResponse()
+                    .answerContent(allAnswers.get(i).getAns())
+                    .questionContent(allAnswers.get(i).getQuestion().getContent())
+                    .id(allAnswers.get(i).getUuid());
+            allAnswersResponse.add(answerDetailsResponse);
+        }
+
+        // Return response
+        return new ResponseEntity<List<AnswerDetailsResponse>>(allAnswersResponse, HttpStatus.FOUND);
+    }
 }
