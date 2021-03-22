@@ -1,30 +1,41 @@
 package com.upgrad.quora.service.entity;
 
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 
 @Entity
-@Table(name= "answer")
-@NamedQueries({
-        @NamedQuery(name = "answerByUuid", query = "select u from AnswerEntity u where u.uuid = :uuid")
-})
-public class AnswerEntity implements Serializable {
+@Table(name = "answer")
+@NamedQueries(
+        {
+                @NamedQuery(name = "answerEntityById", query = "select ae from AnswerEntity ae where ae.id = :id"),
+                @NamedQuery(name = "answerEntityByUuid", query = "select ae from AnswerEntity ae where ae.uuid = :uuid"),
+                @NamedQuery(name = "answerEntityByQuestionId", query = "select ae from AnswerEntity ae inner join ae.questionEntity qn where qn.uuid = :uuid"),
+        }
+)
+public class AnswerEntity {
     @Id
+    @Column(name="id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name="uuid")
+    @NotNull
     @Size(max=200)
     private String uuid;
 
     @Column(name="ans")
+    @NotNull
     @Size(max=255)
     private String ans;
 
     @Column(name="date")
-    private ZonedDateTime date;
+    @NotNull
+    @Size(max=6)
+    private LocalTime date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -58,11 +69,11 @@ public class AnswerEntity implements Serializable {
         this.ans = ans;
     }
 
-    public ZonedDateTime getDate() {
+    public LocalTime getDate() {
         return date;
     }
 
-    public void setDate(ZonedDateTime date) {
+    public void setDate(LocalTime date) {
         this.date = date;
     }
 
