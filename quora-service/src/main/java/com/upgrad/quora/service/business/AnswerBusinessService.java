@@ -101,7 +101,7 @@ public class AnswerBusinessService {
         answerEntity.setUuid(answerEntity1.getUuid());
         answerEntity.setDate(answerEntity1.getDate());
         answerEntity.setUser(answerEntity1.getUser());
-        answerEntity.setAnswer(answerEntity.getAnswer());
+        answerEntity.setAns(answerEntity.getAns());
         answerEntity.setQuestion(answerEntity1.getQuestion());
         answerEntity.setId(answerEntity1.getId());
 

@@ -1,11 +1,9 @@
 package com.upgrad.quora.service.entity;
 
-import org.springframework.stereotype.Repository;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "answer")
@@ -34,8 +32,7 @@ public class AnswerEntity {
 
     @Column(name="date")
     @NotNull
-    @Size(max=6)
-    private LocalTime date;
+    private ZonedDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -69,11 +66,11 @@ public class AnswerEntity {
         this.ans = ans;
     }
 
-    public LocalTime getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalTime date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
