@@ -4,6 +4,8 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.*;
+import com.upgrad.quora.service.helper.EndPoints;
+import com.upgrad.quora.service.helper.UserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -16,8 +18,12 @@ public class UserBusinessService {
 
     @Autowired
     private UserDao userDao;
+
     @Autowired
     private PasswordCryptographyProvider passwordCryptographyProvider;
+
+    @Autowired
+    private UserHelper userHelper;
 
     /**
      * Method for user signup.This method checks for the entry of user in database with first name or email.
@@ -57,25 +63,25 @@ public class UserBusinessService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity signIn(final String userName, final String password) throws AuthenticationFailedException {
-        UserEntity userEntity = userDao.getUserByUserName(userName);
-        if(userEntity == null)
+        UserEntity user_Auth_entity = userDao.getUserByUserName(userName);
+        if(user_Auth_entity == null)
             throw new AuthenticationFailedException("ATH-001","This username does not exist");
 
-        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
+        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, user_Auth_entity.getSalt());
 
-        if(encryptedPassword.equals(userEntity.getPassword())){
+        if(encryptedPassword.equals(user_Auth_entity.getPassword())){
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthEntity = new UserAuthEntity();
 
             final ZonedDateTime now = ZonedDateTime.now();
             final ZonedDateTime expiresAt = now.plusHours(8);
 
-            userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(),now,expiresAt));
+            userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(user_Auth_entity.getUuid(),now,expiresAt));
             userAuthEntity.setLoginAt(now);
             userAuthEntity.setExpiresAt(expiresAt);
 
-            userAuthEntity.setUuid(userEntity.getUuid());
-            userAuthEntity.setUser(userEntity);
+            userAuthEntity.setUuid(user_Auth_entity.getUuid());
+            userAuthEntity.setUser(user_Auth_entity);
             userDao.updateAuthToken(userAuthEntity);
 
             return userAuthEntity;
@@ -104,10 +110,8 @@ public class UserBusinessService {
         }
 
         UserEntity userEntity = userAuthEntity.getUser();
-
         userAuthEntity.setLogoutAt(ZonedDateTime.now());
         userDao.updateAuthToken(userAuthEntity);
-
         return userEntity;
     }
 
@@ -122,16 +126,8 @@ public class UserBusinessService {
      * @throws UserNotFoundException
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserEntity getUser(String userUuid, String authorisation) throws AuthorizationFailedException, UserNotFoundException {
-
+    public UserEntity getUser(String userUuid) {
         UserEntity userEntity =userDao.getUserByUserUuid(userUuid);
-        if(userEntity ==null){
-            throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
-        }
-        UserAuthEntity userAuthEntity = getUserAuth(authorisation);
-        if(userAuthEntity.getLogoutAt() != null && userAuthEntity.getLogoutAt().isAfter(userAuthEntity.getLoginAt())){
-            throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
-        }
         return userEntity;
     }
 
@@ -143,9 +139,6 @@ public class UserBusinessService {
      */
     public UserAuthEntity getUserAuth(final String authorisation) throws AuthorizationFailedException {
         UserAuthEntity userAuthEntity = userDao.getUserAuthByToken(authorisation);
-        if(userAuthEntity ==null){
-            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
-        }
         return userAuthEntity;
     }
 
@@ -162,27 +155,9 @@ public class UserBusinessService {
      */
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserEntity deleteUser(String uuid, String authorisation) throws AuthorizationFailedException,UserNotFoundException {
-        UserEntity userEntity =userDao.getUserByUserUuid(uuid);
-        if(userEntity ==null){
-            throw new UserNotFoundException("USR-001","User with entered uuid to be deleted does not exist");
-        }
-
-        UserAuthEntity userAuthEntity = userDao.getUserAuthByToken(authorisation);
-        if(userAuthEntity ==null){
-            throw new AuthorizationFailedException("ATHR-001","User has not signed in");
-        }
-
-        if(userAuthEntity.getLogoutAt()!=null){
-            throw new AuthorizationFailedException("ATHR-002","User is signed out");
-        }
-
-
-        if(userEntity.getRole().equals("nonadmin")){
-            throw new AuthorizationFailedException("ATHR-003","Unauthorized Access, Entered user is not an admin");
-        }
-
+    public void deleteUser(String uuid, String authorization) throws AuthorizationFailedException,UserNotFoundException {
+        String[] bearerToken = authorization.split("Bearer ");
+        UserEntity userEntity =userHelper.getUser(uuid,bearerToken[1], EndPoints.DELETE_USER);
         userDao.deleteUser(userEntity);
-        return userEntity;
     }
 }

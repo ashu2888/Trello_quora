@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * DAO class handling the CRUD operations on answers
@@ -44,9 +45,25 @@ public class AnswerDao {
      */
     public AnswerEntity getAnswerByUuId(String  uuid) {
         try {
-            return entityManager.createNamedQuery("answerByUuid", AnswerEntity.class).setParameter("uuid", uuid).getSingleResult();
+            return entityManager.createNamedQuery("answerEntityByUuid", AnswerEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
+    }
+    public void userAnswerDelete(final String answerId) {
+        AnswerEntity answerEntity = getAnswerByUuId(answerId);
+        entityManager.remove(answerEntity);
+    }
+
+    public List<AnswerEntity> getAllAnswersToQuestion(final String questionId) {
+        try {
+            return entityManager.createNamedQuery("answerEntityByQuestionId", AnswerEntity.class).setParameter("uuid", questionId).getResultList();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public AnswerEntity editAnswerContent(final AnswerEntity answerEntity) {
+        return entityManager.merge(answerEntity);
     }
 }
