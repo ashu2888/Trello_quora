@@ -8,7 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
-
+/**
+ * DAO class handling the CRUD operations on users
+ * @author Madhuri
+ */
 @Repository
 public class UserDao {
     @PersistenceContext
