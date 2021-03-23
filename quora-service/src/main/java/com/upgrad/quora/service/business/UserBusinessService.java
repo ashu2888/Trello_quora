@@ -62,29 +62,22 @@ public class UserBusinessService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserAuthEntity signIn(final String userName, final String password) throws AuthenticationFailedException {
-        UserEntity user_Auth_entity = userDao.getUserByUserName(userName);
-        if(user_Auth_entity == null)
+        UserEntity userEntity = userDao.getUserByUserName(userName);
+        if(userEntity == null)
             throw new AuthenticationFailedException("ATH-001","This username does not exist");
-
-        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, user_Auth_entity.getSalt());
-
-        if(encryptedPassword.equals(user_Auth_entity.getPassword())){
+        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
+        if(encryptedPassword.equals(userEntity.getPassword())){
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
             UserAuthEntity userAuthEntity = new UserAuthEntity();
-
-            final ZonedDateTime now = ZonedDateTime.now();
-            final ZonedDateTime expiresAt = now.plusHours(8);
-
-            userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(user_Auth_entity.getUuid(),now,expiresAt));
+            ZonedDateTime now = ZonedDateTime.now();
+            ZonedDateTime expiresAt = now.plusHours(8);
+            userAuthEntity.setAccessToken(jwtTokenProvider.generateToken(userEntity.getUuid(),now,expiresAt));
             userAuthEntity.setLoginAt(now);
             userAuthEntity.setExpiresAt(expiresAt);
-
-            userAuthEntity.setUuid(user_Auth_entity.getUuid());
-            userAuthEntity.setUser(user_Auth_entity);
+            userAuthEntity.setUuid(userEntity.getUuid());
+            userAuthEntity.setUser(userEntity);
             userDao.updateAuthToken(userAuthEntity);
-
             return userAuthEntity;
-
         }
         else{
             throw new AuthenticationFailedException("ATH-002", "Password Failed");
