@@ -71,7 +71,7 @@ public class AnswerController {
     public ResponseEntity<AnswerResponse> editAnswer(final AnswerRequest answerRequest,
                                                      @PathVariable("answerId") final String uuid,
                                                      @RequestHeader("authorization") final String accesstoken)
-            throws AnswerNotFoundException, AuthenticationFailedException, AuthorizationFailedException {
+            throws AnswerNotFoundException, AuthorizationFailedException {
         String bearerToken = null;
         try {
             bearerToken = accesstoken.split("Bearer ")[1];

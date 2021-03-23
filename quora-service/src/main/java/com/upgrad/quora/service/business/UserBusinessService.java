@@ -10,7 +10,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-
+/**
+ * Service class handling the business logic for users endpoint
+ * @author Madhuri
+ */
 @Service
 public class UserBusinessService {
 
