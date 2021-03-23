@@ -9,6 +9,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
 
+/**
+ * @author Madhuri
+ * DAO class to perform CRUD operations on user entity
+ */
+
 @Repository
 public class UserDao {
     @PersistenceContext
@@ -22,7 +27,7 @@ public class UserDao {
      */
     public UserEntity getUserByEmail(final String email) {
         try {
-            return entityManager.createNamedQuery("userByEmail", UserEntity.class).setParameter("email", email).getSingleResult();
+            return entityManager.createNamedQuery("user.fetchByEmail", UserEntity.class).setParameter("email", email).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -36,7 +41,7 @@ public class UserDao {
      */
     public UserEntity getUserByName(final String userName) {
         try {
-            return entityManager.createNamedQuery("userByUsername", UserEntity.class).setParameter("userName", userName).getSingleResult();
+            return entityManager.createNamedQuery("user.fetchByUsername", UserEntity.class).setParameter("userName", userName).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -64,7 +69,7 @@ public class UserDao {
      */
     public UserEntity getUserByUserName(final String userName) {
         try {
-            return entityManager.createNamedQuery("userByUsername", UserEntity.class).setParameter("userName", userName).getSingleResult();
+            return entityManager.createNamedQuery("user.fetchByUsername", UserEntity.class).setParameter("userName", userName).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -89,7 +94,7 @@ public class UserDao {
     public UserAuthEntity getUserAuthByToken(String accessToken) {
 
         try {
-            return entityManager.createNamedQuery("userByAuthToken", UserAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+            return entityManager.createNamedQuery("user.fetchByAuthToken", UserAuthEntity.class).setParameter("accessToken", accessToken).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
@@ -103,7 +108,7 @@ public class UserDao {
      */
     public UserEntity getUserByUserUuid(final String userUuid) {
         try {
-            return entityManager.createNamedQuery("userByUseruuid", UserEntity.class).setParameter("uuid", userUuid).getSingleResult();
+            return entityManager.createNamedQuery("user.fetchByUseruuid", UserEntity.class).setParameter("uuid", userUuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

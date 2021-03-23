@@ -12,20 +12,29 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author Madhuri
+ * Controller class for handling the user profile endpoint requests
+ */
 
 @RestController
 @RequestMapping("/")
 public class CommonController {
+
     @Autowired
     private UserHelper userHelper;
-    /**
-     *  This controller class returns the details about the user with uuid and access token provided in the http Request.
-     *  It accepts http GET method and throws AuthorizationFailedException when user is signout or not signin.
-     *  It throws  UserNotFoundException when user with given uuid is not exist in users entity table.
-     */
 
+    /**
+     * Get method to fetch the user profile based in user ID provided
+     * @param userUuid
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
     @RequestMapping(method = RequestMethod.GET, path="/userprofile/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException , UserNotFoundException {
+    public ResponseEntity<UserDetailsResponse> getUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization)
+                             throws AuthorizationFailedException , UserNotFoundException {
         String[] bearerToken = authorization.split("Bearer ");
         UserEntity userEntity = userHelper.getUser(userUuid, bearerToken[1], EndPoints.COMMON);
         UserDetailsResponse userDetailsResponse = new UserDetailsResponse()
@@ -37,8 +46,6 @@ public class CommonController {
                 .aboutMe(userEntity.getAboutMe())
                 .dob(userEntity.getDob())
                 .contactNumber(userEntity.getContactNumber());
-
         return new  ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
     }
-
 }

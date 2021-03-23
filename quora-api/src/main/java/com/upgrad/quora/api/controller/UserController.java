@@ -23,24 +23,29 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Base64;
 import java.util.UUID;
 
+/**
+ * @author Madhuri
+ * Controller class for handling the User endpoint requests
+ */
+
+
 @RestController
 @RequestMapping("/")
 public class UserController {
+
     @Autowired
     private UserBusinessService userBusinessService;
 
     /**
-     * Method for user sign up. Http method type is Post, end point is "/user/signup", consumes json file and produces out put in json format.
-     * Checks for the existing username and email id if not available throws SignUpRestrictedException otherwise creates user entity in the database.
+     * Post method for handling the signup request of a user
      * @param signupUserRequest
-     * @return SignupUserResponse
+     * @return
      * @throws SignUpRestrictedException
      */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signup" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> usersignup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
 
         final UserEntity userEntity = new UserEntity();
-
         userEntity.setUuid(UUID.randomUUID().toString());
         userEntity.setFirstName(signupUserRequest.getFirstName());
         userEntity.setLastName(signupUserRequest.getLastName());
@@ -53,18 +58,17 @@ public class UserController {
         userEntity.setContactNumber(signupUserRequest.getContactNumber());
         userEntity.setRole("nonadmin");
 
-
         final UserEntity createdUserEntity = userBusinessService.signup(userEntity);
         SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
 
         return new ResponseEntity<SignupUserResponse>(userResponse, HttpStatus.CREATED);
     }
 
+
     /**
-     * Method for user sign in. Http method type is Post, end point is "/user/signin", consumes json file and produces out put in json format.
-     * Creates access token using base 64.
-     * Checks for the username and password if not available throws AuthenticationFailedException otherwise creates entry in the user authentication table.
-     * @return SigninResponse
+     * Post method handling the sign in request of a user
+     * @param authorization
+     * @return
      * @throws AuthenticationFailedException
      */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -83,10 +87,9 @@ public class UserController {
     }
 
     /**
-     * Method for user sign out. Http method is POST, end point is "/user/signout", takes json file as input and produces json file as output.
-     * Checks whether user is signedin or not and if not signed in then throws SignOutRestrictedException exception
+     * Post method handling the signout operation of a user
      * @param authorization
-     * @return SignoutResponse
+     * @return
      * @throws SignOutRestrictedException
      */
     @RequestMapping(method = RequestMethod.POST, path = "/user/signout" , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

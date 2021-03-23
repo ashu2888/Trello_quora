@@ -13,6 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 
+/**
+ * @author Madhuri
+ * Service class handling the user endpoints business logic
+ */
+
 @Service
 public class UserBusinessService {
 
@@ -26,15 +31,11 @@ public class UserBusinessService {
     private UserHelper userHelper;
 
     /**
-     * Method for user signup.This method checks for the entry of user in database with first name or email.
-     * If there is no entry in database then throws SignUpRestrictedException exception and if user is available in database
-     * then this method calls entrypt method of PasswordCreptographyProvider class to encrypt the password and to genarate the salt.
-     * Passes this information to the DEO class for persisting the user into database.
+     * Service method for handling the business logic for user signup request
      * @param userEntity
-     * @return userEntity
+     * @return
      * @throws SignUpRestrictedException
      */
-
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signup(UserEntity userEntity) throws SignUpRestrictedException {
 
@@ -53,12 +54,10 @@ public class UserBusinessService {
     }
 
     /**
-     * Method takes username and password as input, checks for the user existance if not available throws AuthenticationFailedException exception otherwise
-     * creates base 64 password using encrypt method of PasswordCryptographyProvider class.If created password is available in db with the help of JwtTokenProvider class creates access token
-     * and stores into user authentication table otherwise throws AuthenticationFailedException exception
+     * Service method for handling the business logic for user sign in request
      * @param userName
      * @param password
-     * @return object of UserAuthetication entity class
+     * @return
      * @throws AuthenticationFailedException
      */
     @Transactional(propagation = Propagation.REQUIRED)
@@ -94,13 +93,11 @@ public class UserBusinessService {
     }
 
     /**
-     * Method for user signout. This method checks the entry in db with provided access token if entry is available in db user signsout and logoutAt property in user authentication table gets updated
-     * otherwise throws SignOutRestrictedException
+     * Service method for handling the business logic for user signout request
      * @param accessToken
      * @return
      * @throws SignOutRestrictedException
      */
-
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signOut(String accessToken) throws SignOutRestrictedException {
 
@@ -116,14 +113,9 @@ public class UserBusinessService {
     }
 
     /**
-     * method retrives the details about the provides user id with the help of access token. Checks for valid user id if fails throws UserNotFoundException,
-     * also checks for valid accesstoken and LogoutAt time if valid access token is not provided or user is already loged out then throws AuthorizationFailedException exception
-     * other wise returns detail of user
+     * Service method for handling the business logic for user entity
      * @param userUuid
-     * @param authorisation
      * @return
-     * @throws AuthorizationFailedException
-     * @throws UserNotFoundException
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUser(String userUuid) {
@@ -132,7 +124,7 @@ public class UserBusinessService {
     }
 
     /**
-     *
+     * Service method for handling the business logic for user auth entity
      * @param authorisation
      * @return
      * @throws AuthorizationFailedException
@@ -144,16 +136,12 @@ public class UserBusinessService {
 
 
     /**
-     * Method for deleting user with provided user id and access token. Checks for valid user id if fails throws UserNotFoundException,
-     *  also checks for valid access token and LogoutAt time if valid access token is not provided or user is already logged out then throws AuthorizationFailedException exception
-     *   other wise user gets deleted
+     * Service method for handling the business logic for delete user request
      * @param uuid
-     * @param authorisation
-     * @return
+     * @param authorization
      * @throws AuthorizationFailedException
      * @throws UserNotFoundException
      */
-
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteUser(String uuid, String authorization) throws AuthorizationFailedException,UserNotFoundException {
         String[] bearerToken = authorization.split("Bearer ");

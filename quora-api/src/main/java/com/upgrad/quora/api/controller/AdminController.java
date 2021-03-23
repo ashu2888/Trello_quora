@@ -10,16 +10,24 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author Madhuri
+ * Controller class for handling the admin endpoint requests
+ */
 
 @RestController
 @RequestMapping("/")
 public class AdminController {
+
     @Autowired
-    UserBusinessService userBusinessService;
+    private UserBusinessService userBusinessService;
+
     /**
-     * This controller class takes user uuid and access token as request parameters  and returns UserDeleteResponce. The http request method is DELETE.
-     * It throws AuthorizationFailed exception if given access token is not valid or user is signed out or not signin.
-     * It also throws UserNotFound exception if there is no user found in users class with given uuid.
+     * Endpoint method handling the user delete operation
+     * @param userUuid
+     * @param authorization
+     * @throws AuthorizationFailedException, UserNotFoundException
+     * @return UserDeleteResponce
      */
     @RequestMapping(method = RequestMethod.DELETE,path ="/admin/user/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UserDeleteResponse> deleteUser(@PathVariable("userId") final String userUuid, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, UserNotFoundException

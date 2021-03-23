@@ -10,8 +10,9 @@ import java.util.List;
 
 /**
  * DAO class handling the CRUD operations on answers
- * @author Vipin mohan
+ * @author Vipin mohan, Ashish
  */
+
 @Repository
 public class AnswerDao {
 
@@ -45,24 +46,39 @@ public class AnswerDao {
      */
     public AnswerEntity getAnswerByUuId(String  uuid) {
         try {
-            return entityManager.createNamedQuery("answerEntityByUuid", AnswerEntity.class).setParameter("uuid", uuid).getSingleResult();
+            return entityManager.createNamedQuery("answer.fetchByUuid", AnswerEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
+
+    /**
+     * Delete the answer
+     * @param answerId
+     */
     public void userAnswerDelete(final String answerId) {
         AnswerEntity answerEntity = getAnswerByUuId(answerId);
         entityManager.remove(answerEntity);
     }
 
+    /**
+     * Fetch all answers for a question
+     * @param questionId
+     * @return
+     */
     public List<AnswerEntity> getAllAnswersToQuestion(final String questionId) {
         try {
-            return entityManager.createNamedQuery("answerEntityByQuestionId", AnswerEntity.class).setParameter("uuid", questionId).getResultList();
+            return entityManager.createNamedQuery("answer.fetchByQuestionId", AnswerEntity.class).setParameter("uuid", questionId).getResultList();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
+    /**
+     * Merge the answer content
+     * @param answerEntity
+     * @return
+     */
     public AnswerEntity editAnswerContent(final AnswerEntity answerEntity) {
         return entityManager.merge(answerEntity);
     }
