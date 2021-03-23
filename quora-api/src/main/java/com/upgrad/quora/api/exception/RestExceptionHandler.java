@@ -14,7 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 
 public class RestExceptionHandler {
     /**
-     *
+     * Handler for signUpRestriction
      * @param exe
      * @param request
      * @return ErrorResponse
@@ -38,7 +38,7 @@ public class RestExceptionHandler {
     }
 
     /**
-     *
+     * Handler for signOutRestrictedException
      * @param exe
      * @param request
      * @return ErrorResponse
@@ -51,7 +51,7 @@ public class RestExceptionHandler {
     }
 
     /**
-     *
+     * Handler for userNotFoundException
      * @param exe
      * @param request
      * @return ErrorResponse
@@ -63,16 +63,17 @@ public class RestExceptionHandler {
     }
 
     /**
-     *
-     * @param exe
+     * Handler for authorizationFailedException
+     * @param exception
      * @param request
      * @return ErrorResponse
      */
     @ExceptionHandler(AuthorizationFailedException.class)
-    public ResponseEntity<ErrorResponse> authorizationFailedException(AuthorizationFailedException exe , WebRequest request){
-        return new ResponseEntity<ErrorResponse>(
-                new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()),HttpStatus.FORBIDDEN);
-    }
+    public ResponseEntity<ErrorResponse> authorizationFailedException(AuthorizationFailedException exception , WebRequest request){
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).
+                message(exception.getErrorMessage()), HttpStatus.FORBIDDEN);
+
+        }
 
     /**
      * Handler for InvalidQuestionException

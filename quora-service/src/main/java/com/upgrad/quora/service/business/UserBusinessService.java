@@ -123,7 +123,7 @@ public class UserBusinessService {
      * also checks for valid accesstoken and LogoutAt time if valid access token is not provided or user is already loged out then throws AuthorizationFailedException exception
      * other wise returns detail of user
      * @param userUuid
-     * @param authorisation
+     * @param
      * @return
      * @throws AuthorizationFailedException
      * @throws UserNotFoundException
@@ -151,7 +151,7 @@ public class UserBusinessService {
      *  also checks for valid access token and LogoutAt time if valid access token is not provided or user is already logged out then throws AuthorizationFailedException exception
      *   other wise user gets deleted
      * @param uuid
-     * @param authorisation
+     * @param
      * @return
      * @throws AuthorizationFailedException
      * @throws UserNotFoundException
