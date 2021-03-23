@@ -75,7 +75,7 @@ public class AnswerController {
     public ResponseEntity<AnswerResponse> editAnswer(final AnswerRequest answerRequest,
                                                      @PathVariable("answerId") final String uuid,
                                                      @RequestHeader("authorization") final String accesstoken)
-            throws AnswerNotFoundException, AuthenticationFailedException, AuthorizationFailedException {
+            throws AnswerNotFoundException, AuthorizationFailedException {
         String bearerToken = null;
         try {
             bearerToken = accesstoken.split("Bearer ")[1];
@@ -88,8 +88,8 @@ public class AnswerController {
 
         // Return response with created answer entity
         final AnswerEntity editAnswerEntity =  answerBusinessService.editAnswer(answerEntity, uuid, bearerToken);
-        AnswerResponse answerResponse = new AnswerResponse().id(editAnswerEntity.getUuid()).status("ANSWER CREATED");
-        return new ResponseEntity<>(answerResponse, HttpStatus.CREATED);
+        AnswerResponse answerResponse = new AnswerResponse().id(editAnswerEntity.getUuid()).status("ANSWER EDITED");
+        return new ResponseEntity<>(answerResponse, HttpStatus.OK);
 
     }
 

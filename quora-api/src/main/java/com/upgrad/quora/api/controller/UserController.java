@@ -36,7 +36,10 @@ public class UserController {
      * @return SignupUserResponse
      * @throws SignUpRestrictedException
      */
-    @RequestMapping(method = RequestMethod.POST, path = "/user/signup" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST,
+            path = "/user/signup" ,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> usersignup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
 
         final UserEntity userEntity = new UserEntity();
@@ -67,7 +70,10 @@ public class UserController {
      * @return SigninResponse
      * @throws AuthenticationFailedException
      */
-    @RequestMapping(method = RequestMethod.POST, path = "/user/signin" ,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST,
+            path = "/user/signin" ,
+            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> usersignin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
         byte[] decode = Base64.getDecoder().decode(authorization.split("Basic ")[1]);
         String decodedText = new String(decode);
@@ -89,7 +95,9 @@ public class UserController {
      * @return SignoutResponse
      * @throws SignOutRestrictedException
      */
-    @RequestMapping(method = RequestMethod.POST, path = "/user/signout" , produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST,
+            path = "/user/signout" ,
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignoutResponse> usersignout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
         String[] bearerToken = authorization.split("Bearer ");
         UserEntity user_Auth_entity = userBusinessService.signOut(bearerToken[1]);
