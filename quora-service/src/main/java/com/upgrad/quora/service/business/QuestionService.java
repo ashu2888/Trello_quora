@@ -25,11 +25,18 @@ import java.util.UUID;
 public class QuestionService {
 
     @Autowired
-    QuestionDao questionDao;
+    private QuestionDao questionDao;
 
     @Autowired
-    UserHelper userHelper;
+    private UserHelper userHelper;
 
+    /**
+     * Service method handling the creation question business logic
+     * @param content
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     */
     @Transactional
      public QuestionEntity createQuestion(final String content,final String authorization) throws AuthorizationFailedException {
         String[] bearerToken = authorization.split("Bearer ");
@@ -43,6 +50,12 @@ public class QuestionService {
         return questionEntity;
      }
 
+    /**
+     * Service method handling the get all questions business logic
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     */
     @Transactional
     public List<QuestionEntity> getAllQuestions(final String authorization) throws AuthorizationFailedException {
         String[] bearerToken = authorization.split("Bearer ");
@@ -50,6 +63,14 @@ public class QuestionService {
         return  questionDao.getAllQuestions();
     }
 
+    /**
+     * Service method handling the update question business logic
+     * @param content
+     * @param questionId
+     * @param authorization
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
     @Transactional
     public void updateQuestion(final String content, final String questionId, final String authorization) throws AuthorizationFailedException,InvalidQuestionException {
         String[] bearerToken = authorization.split("Bearer ");
@@ -66,6 +87,13 @@ public class QuestionService {
         }
     }
 
+    /**
+     * Service method handling the delete question business logic
+     * @param questionId
+     * @param authorization
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
     @Transactional
     public void deleteQuestion(final String questionId, final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
         String[] bearerToken = authorization.split("Bearer ");
@@ -79,6 +107,14 @@ public class QuestionService {
         questionDao.deleteQuestion(questionId);
     }
 
+    /**
+     * Service method handling the get all questions by user business logic
+     * @param userId
+     * @param authorization
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
     @Transactional
     public List<QuestionEntity> getAllQuestionsByUser(final String userId,final String authorization) throws AuthorizationFailedException, UserNotFoundException {
         String[] bearerToken = authorization.split("Bearer ");

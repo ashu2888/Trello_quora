@@ -8,12 +8,24 @@ import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author zeelani
+ * Helper class for User service logi
+ */
+
 @Component
 public class UserHelper {
 
     @Autowired
     private UserBusinessService userBusinessService;
 
+    /**
+     * Helper class to user service logic to get the auth details
+     * @param authorisation
+     * @param endpoint
+     * @return
+     * @throws AuthorizationFailedException
+     */
     public UserAuthEntity getUserAuth(final String authorisation, EndPoints endpoint) throws AuthorizationFailedException {
         UserAuthEntity userAuthEntity = userBusinessService.getUserAuth(authorisation);
         if(userAuthEntity ==null){
@@ -35,6 +47,14 @@ public class UserHelper {
                     throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
                 case DELETE_USER:
                     throw new AuthorizationFailedException("ATHR-002","User is signed out.");
+                case CREATE_ANSWER:
+                    throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to post an answer");
+                case EDIT_ANSWER:
+                    throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to edit an answer");
+                case DELETE_ANSWER:
+                    throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete an answer");
+                case ALL_ANSWERS_FOR_QUESTION:
+                    throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get the answers");
                 default:
                     throw new AuthorizationFailedException("ATHR-002","User is signed out");
             }
@@ -43,6 +63,15 @@ public class UserHelper {
         return userAuthEntity;
     }
 
+    /**
+     * Helper class to user service logic to get the user details
+     * @param userUuid
+     * @param authorization
+     * @param endpoint
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
     public UserEntity getUser(final String userUuid, final String authorization, EndPoints endpoint) throws AuthorizationFailedException, UserNotFoundException {
         UserEntity userEntity =userBusinessService.getUser(userUuid);
         if (userEntity == null) {

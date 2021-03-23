@@ -13,10 +13,10 @@ import java.util.Collection;
 
 // queries for extracting data from database
 @NamedQueries({
-        @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email = :email"),
-        @NamedQuery(name = "userByUuid", query = "select u from UserEntity u where u.uuid = :uuid"),
-        @NamedQuery(name = "userByUsername", query = "select u from UserEntity u where u.userName = :userName"),
-        @NamedQuery(name = "userByUseruuid", query = "select u from UserEntity u where u.uuid = :uuid")
+        @NamedQuery(name = "user.fetchByEmail", query = "select u from UserEntity u where u.email = :email"),
+        @NamedQuery(name = "user.fetchByUuid", query = "select u from UserEntity u where u.uuid = :uuid"),
+        @NamedQuery(name = "user.fetchByUsername", query = "select u from UserEntity u where u.userName = :userName"),
+        @NamedQuery(name = "user.fetchByUseruuid", query = "select u from UserEntity u where u.uuid = :uuid")
 })
 public class UserEntity implements Serializable {
 

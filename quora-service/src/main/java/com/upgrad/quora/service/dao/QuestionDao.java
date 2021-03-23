@@ -13,6 +13,7 @@ import java.util.List;
  * DAO class handling the CRUD operations on questions
  * @author zeelani
  */
+
 @Repository
 public class QuestionDao {
 
@@ -34,7 +35,7 @@ public class QuestionDao {
      * @return list of Question objects
      */
     public List<QuestionEntity> getAllQuestions() {
-        return entityManager.createNamedQuery("allQuestions",QuestionEntity.class).getResultList();
+        return entityManager.createNamedQuery("question.fetchAll",QuestionEntity.class).getResultList();
     }
 
     /**
@@ -65,7 +66,7 @@ public class QuestionDao {
      */
     public QuestionEntity getQuestion(final String questionUUID) {
         try {
-            return entityManager.createNamedQuery("questionByUuid", QuestionEntity.class).
+            return entityManager.createNamedQuery("question.fetchByUuid", QuestionEntity.class).
                     setParameter("uuid", questionUUID).getSingleResult();
         } catch (NoResultException n) {
             return null;
@@ -78,7 +79,7 @@ public class QuestionDao {
      * @return list of Question objects
      */
     public List<QuestionEntity> getAllQuestionsByUser(UserEntity user) {
-        return entityManager.createNamedQuery("questionByUser",QuestionEntity.class).setParameter("user",user).getResultList();
+        return entityManager.createNamedQuery("question.fetchByUser",QuestionEntity.class).setParameter("user",user).getResultList();
     }
 
 
