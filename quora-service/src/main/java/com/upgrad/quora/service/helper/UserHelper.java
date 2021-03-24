@@ -78,6 +78,8 @@ public class UserHelper {
             switch (endpoint) {
                 case DELETE_USER:
                     throw new UserNotFoundException("USR-001","User with entered uuid to be deleted does not exist");
+                case ALL_QUESTIONS_BY_USER:
+                    throw new UserNotFoundException("USR-001", "User with entered uuid whose question details are to be seen does not exist");
                 default:
                     throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
             }

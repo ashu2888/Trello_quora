@@ -42,7 +42,7 @@ public class QuestionController {
     public ResponseEntity<QuestionResponse> createQuestion(QuestionRequest questionRequest, @RequestHeader("authorization") final String authorization)
                                                  throws AuthorizationFailedException {
         final QuestionEntity createdQuestion = questionService.createQuestion(questionRequest.getContent(),authorization);
-        QuestionResponse questionResponse = new QuestionResponse().id(createdQuestion.getUuid()).status("Question created successfully");
+        QuestionResponse questionResponse = new QuestionResponse().id(createdQuestion.getUuid()).status("QUESTION CREATED");
         return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.CREATED);
     }
 
@@ -78,7 +78,7 @@ public class QuestionController {
     public ResponseEntity<QuestionEditResponse> editQuestionContent(@PathVariable("questionId") final String questionId, QuestionEditRequest questionEditRequest,
                                   @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, InvalidQuestionException {
         questionService.updateQuestion(questionEditRequest.getContent(),questionId, authorization);
-        QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(questionId).status("Question edited successfully");
+        QuestionEditResponse questionEditResponse = new QuestionEditResponse().id(questionId).status("QUESTION EDITED");
         return new ResponseEntity<QuestionEditResponse>(questionEditResponse, HttpStatus.OK);
     }
 

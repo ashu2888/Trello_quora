@@ -65,7 +65,7 @@ public class AnswerController {
     public ResponseEntity<AnswerResponse> editAnswer(final AnswerRequest answerRequest, @PathVariable("answerId") final String answerId,
                             @RequestHeader("authorization") final String authorization) throws AnswerNotFoundException, AuthorizationFailedException {
         AnswerEntity answerEntity = answerBusinessService.editAnswer(answerRequest.getAnswer(),answerId,authorization);
-        AnswerResponse answerResponse = new AnswerResponse().id(answerEntity.getUuid()).status("ANSWER CREATED");
+        AnswerResponse answerResponse = new AnswerResponse().id(answerEntity.getUuid()).status("ANSWER EDITED");
         return new ResponseEntity<>(answerResponse, HttpStatus.OK);
     }
 

@@ -63,6 +63,7 @@ public class AnswerBusinessService {
         answerEntity.setDate(ZonedDateTime.now());
         answerEntity.setUser(userAuthEntity.getUser());
         answerEntity.setQuestion(questionEntity);
+        answerEntity.setAns(answer);
         return answerDao.createAnswer(answerEntity);
     }
 
